@@ -1,14 +1,18 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-import sqlite3
+import os
 import random
+import string
+import psycopg
+from psycopg.rows import dict_row
 
 app = Flask(__name__)
-app.secret_key = "novatrack_secret_key"
+app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 
 def create_tables():
     conn = get_db_connection()
+    cur = conn.cursor()
 
-    conn.execute("""
+    cur.execute("""
     CREATE TABLE IF NOT EXISTS packages (
         tracking_number TEXT PRIMARY KEY,
         customer TEXT,
@@ -18,43 +22,46 @@ def create_tables():
     )
     """)
 
-    conn.execute("""
+    cur.execute("""
     CREATE TABLE IF NOT EXISTS tracking_history (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         tracking_number TEXT,
         update_message TEXT,
-        update_time TEXT
+        update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     """)
 
     conn.commit()
+    cur.close()
     conn.close()
 
 def get_db_connection():
-    conn = sqlite3.connect("database.db")
-    conn.row_factory = sqlite3.Row
-    return conn
-
+    return psycopg.connect(
+        os.environ["DATABASE_URL"],
+        row_factory=dict_row
+    )
 import random
 import string
 
 def generate_tracking_number():
     conn = get_db_connection()
+    cur = conn.cursor()
 
     while True:
-        # mix of letters + numbers
         part1 = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
         part2 = random.randint(1000, 9999)
         part3 = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
 
         tracking_number = f"NVT-US-{part1}-{part2}-{part3}"
 
-        existing = conn.execute(
-            "SELECT * FROM packages WHERE tracking_number = ?",
+        cur.execute(
+            "SELECT * FROM packages WHERE tracking_number = %s",
             (tracking_number,)
-        ).fetchone()
+        )
+        existing = cur.fetchone()
 
         if not existing:
+            cur.close()
             conn.close()
             return tracking_number
         
@@ -65,20 +72,24 @@ def home():
 
 @app.route("/track", methods=["POST"])
 def track_package():
-    tracking_number = request.form["tracking_number"].strip().upper()
+    tracking_number = request.form["tracking_number"].strip()
 
     conn = get_db_connection()
+    cur = conn.cursor()
 
-    package = conn.execute(
-        "SELECT * FROM packages WHERE tracking_number = ?",
+    cur.execute(
+        "SELECT * FROM packages WHERE tracking_number = %s",
         (tracking_number,)
-    ).fetchone()
+    )
+    package = cur.fetchone()
 
-    history = conn.execute(
-        "SELECT * FROM tracking_history WHERE tracking_number = ? ORDER BY id ASC",
+    cur.execute(
+        "SELECT * FROM tracking_history WHERE tracking_number = %s ORDER BY id ASC",
         (tracking_number,)
-    ).fetchall()
+    )
+    history = cur.fetchall()
 
+    cur.close()
     conn.close()
 
     return render_template(
@@ -109,28 +120,30 @@ def create_shipment():
     tracking_number = generate_tracking_number()
 
     conn = get_db_connection()
+    cur = conn.cursor()
 
-    conn.execute(
-        "INSERT INTO packages (tracking_number, customer, origin, destination, status) VALUES (?, ?, ?, ?,?)",
+    cur.execute(
+        "INSERT INTO packages (tracking_number, customer, origin, destination, status) VALUES (%s, %s, %s, %s, %s)",
         (tracking_number, customer, origin, destination, status)
-        )
-    
-    conn.execute(
-    "INSERT INTO tracking_history (tracking_number, update_message, update_time) VALUES (?, ?, datetime('now'))",
-    (tracking_number, "Shipment Created")
-)
+    )
+
+    cur.execute(
+        "INSERT INTO tracking_history (tracking_number, update_message) VALUES (%s, %s)",
+        (tracking_number, "Shipment Created")
+    )
 
     conn.commit()
+    cur.close()
     conn.close()
 
     return render_template(
-    "shipment_success.html",
-    tracking_number=tracking_number,
-    customer=customer,
-    origin=origin,
-    destination=destination,
-    status=status
-)
+        "shipment_success.html",
+        tracking_number=tracking_number,
+        customer=customer,
+        origin=origin,
+        destination=destination,
+        status=status
+    )
 @app.route("/novatrack-update")
 def update_page():
      if not session.get("admin_logged_in"):
@@ -142,29 +155,32 @@ def update_page():
 def add_update():
     if not session.get("admin_logged_in"):
         return redirect(url_for("login_page"))
-    
-    tracking_number = request.form["tracking_number"].strip().upper()
+
+    tracking_number = request.form["tracking_number"].strip()
     message = request.form["message"].strip()
 
     conn = get_db_connection()
+    cur = conn.cursor()
 
-    package = conn.execute(
-        "SELECT * FROM packages WHERE tracking_number = ?",
+    cur.execute(
+        "SELECT * FROM packages WHERE tracking_number = %s",
         (tracking_number,)
-    ).fetchone()
+    )
+    package = cur.fetchone()
 
     if package:
-        conn.execute(
-            "INSERT INTO tracking_history (tracking_number, update_message, update_time) VALUES (?, ?, datetime('now'))",
+        cur.execute(
+            "INSERT INTO tracking_history (tracking_number, update_message) VALUES (%s, %s)",
             (tracking_number, message)
         )
 
-        conn.execute(
-            "UPDATE packages SET status = ? WHERE tracking_number = ?",
+        cur.execute(
+            "UPDATE packages SET status = %s WHERE tracking_number = %s",
             (message, tracking_number)
         )
 
         conn.commit()
+        cur.close()
         conn.close()
 
         return f"""
@@ -174,12 +190,13 @@ def add_update():
         <br>
         <a href="/novatrack-update">Add Another Update</a>
         """
-
     else:
+        cur.close()
         conn.close()
+
         return f"""
         <h2>Package Not Found</h2>
-        <p>No package was found with tracking number <strong>{tracking_number}</strong>.</p>
+        <p>No package was found with tracking number <strong>{tracking_number}</strong></p>
         <br>
         <a href="/novatrack-update">Go Back</a>
         """
@@ -215,36 +232,42 @@ def dashboard():
     search_query = request.args.get("search", "").strip()
 
     conn = get_db_connection()
+    cur = conn.cursor()
 
-    total_shipments = conn.execute(
-        "SELECT COUNT(*) FROM packages"
-    ).fetchone()[0]
+    cur.execute("SELECT COUNT(*) FROM packages")
+    total_shipments = cur.fetchone()[0]
 
-    delivered = conn.execute(
-        "SELECT COUNT(*) FROM packages WHERE status = ?",
+    cur.execute(
+        "SELECT COUNT(*) FROM packages WHERE status = %s",
         ("Delivered",)
-    ).fetchone()[0]
+    )
+    delivered = cur.fetchone()[0]
 
-    in_transit = conn.execute(
-        "SELECT COUNT(*) FROM packages WHERE status = ?",
+    cur.execute(
+        "SELECT COUNT(*) FROM packages WHERE status = %s",
         ("In Transit",)
-    ).fetchone()[0]
+    )
+    in_transit = cur.fetchone()[0]
 
-    out_for_delivery = conn.execute(
-        "SELECT COUNT(*) FROM packages WHERE status = ?",
+    cur.execute(
+        "SELECT COUNT(*) FROM packages WHERE status = %s",
         ("Out for Delivery",)
-    ).fetchone()[0]
+    )
+    out_for_delivery = cur.fetchone()[0]
 
     if search_query:
-        shipments = conn.execute(
-            "SELECT * FROM packages WHERE tracking_number LIKE ? ORDER BY rowid DESC",
+        cur.execute(
+            "SELECT * FROM packages WHERE tracking_number ILIKE %s ORDER BY tracking_number DESC",
             (f"%{search_query}%",)
-        ).fetchall()
+        )
+        shipments = cur.fetchall()
     else:
-        shipments = conn.execute(
-            "SELECT * FROM packages ORDER BY rowid DESC LIMIT 10"
-        ).fetchall()
+        cur.execute(
+            "SELECT * FROM packages ORDER BY tracking_number DESC LIMIT 10"
+        )
+        shipments = cur.fetchall()
 
+    cur.close()
     conn.close()
 
     return render_template(
@@ -263,17 +286,21 @@ def view_shipment(tracking_number):
         return redirect(url_for("login_page"))
 
     conn = get_db_connection()
+    cur = conn.cursor()
 
-    package = conn.execute(
-        "SELECT * FROM packages WHERE tracking_number = ?",
+    cur.execute(
+        "SELECT * FROM packages WHERE tracking_number = %s",
         (tracking_number,)
-    ).fetchone()
+    )
+    package = cur.fetchone()
 
-    history = conn.execute(
-        "SELECT * FROM tracking_history WHERE tracking_number = ? ORDER BY id ASC",
+    cur.execute(
+        "SELECT * FROM tracking_history WHERE tracking_number = %s ORDER BY id ASC",
         (tracking_number,)
-    ).fetchall()
+    )
+    history = cur.fetchall()
 
+    cur.close()
     conn.close()
 
     return render_template(
