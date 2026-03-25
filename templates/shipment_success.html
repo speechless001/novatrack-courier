@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+    
+    <title>Shipment Created - NovaTrack Courier</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef3f8;
+            margin: 0;
+            padding: 60px 20px;
+        }
+
+        .box {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0px 6px 18px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #0077ff;
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 34px;
+        }
+
+        .content {
+            padding: 35px;
+        }
+
+        .success {
+            color: #28a745;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .detail-box {
+            background: #f8fbff;
+            border-left: 5px solid #0077ff;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .detail-box strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .detail-box span {
+            font-size: 20px;
+            color: #111;
+            word-break: break-word;
+        }
+
+        .tracking-box {
+            background: #f4faff;
+            border: 2px dashed #0077ff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .tracking-box strong {
+            display: block;
+            margin-bottom: 10px;
+            color: #0077ff;
+            font-size: 18px;
+        }
+
+        .tracking-number {
+            font-size: 30px;
+            font-weight: bold;
+            color: #111;
+            letter-spacing: 1px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 13px 22px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #0077ff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #005ed6;
+        }
+
+        .btn-secondary {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #1e7e34;
+        }
+
+        .btn-light {
+            background: #e9ecef;
+            color: #222;
+        }
+
+        .btn-light:hover {
+            background: #d9dee3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <div class="header">
+            <h1>NovaTrack Courier</h1>
+        </div>
+
+        <div class="content">
+            <div class="success">Shipment Created Successfully</div>
+
+            <div class="tracking-box">
+                <strong>Tracking Number</strong>
+                <div class="tracking-number">{{ tracking_number }}</div>
+            </div>
+
+            <div class="details-grid">
+                <div class="detail-box">
+                    <strong>Customer</strong>
+                    <span>{{ customer }}</span>
+                </div>
+
+                <div class="detail-box">
+                    <strong>Origin</strong>
+                    <span>{{ origin }}</span>
+                </div>
+
+                <div class="detail-box">
+                    <strong>Destination</strong>
+                    <span>{{ destination }}</span>
+                </div>
+
+                <div class="detail-box">
+                    <strong>Status</strong>
+                    <span>{{ status }}</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <a class="btn btn-primary" href="/novatrack-admin">Create Another Shipment</a>
+                <a class="btn btn-secondary" href="/dashboard">Go To Dashboard</a>
+                <a class="btn btn-light" href="/view-shipment/{{ tracking_number }}">View Shipment</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
