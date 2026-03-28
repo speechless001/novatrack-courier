@@ -6,13 +6,15 @@ import psycopg
 from psycopg.rows import dict_row
 from datetime import datetime
 
-raw_time = item['update_time']
+for item in history:
+    raw_time = item['update_time']
 
-# Convert to datetime if it's a string
-if isinstance(raw_time, str):
-    raw_time = datetime.fromisoformat(raw_time)
+    # Convert if it's a string
+    if isinstance(raw_time, str):
+        raw_time = datetime.fromisoformat(raw_time)
 
-formatted_time = raw_time.strftime("%b %d, %Y • %I:%M %p")
+    item['formatted_time'] = raw_time.strftime("%b %d, %Y • %I:%M %p")
+
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 
