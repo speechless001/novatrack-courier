@@ -298,13 +298,18 @@ def dashboard():
 
     if search_query:
         cur.execute(
-            "SELECT * FROM packages WHERE tracking_number ILIKE %s ORDER BY tracking_number DESC",
-            (f"%{search_query}%",)
+            """
+            SELECT * FROM packages
+            WHERE tracking_number ILIKE %s
+            OR customer ILIKE %s
+            ORDER BY tracking_number DESC
+            """,
+            (f"%{search_query}%", f"%{search_query}%")
         )
         shipments = cur.fetchall()
     else:
         cur.execute(
-            "SELECT * FROM packages ORDER BY tracking_number DESC LIMIT 10"
+            "SELECT * FROM packages ORDER BY tracking_number DESC"
         )
         shipments = cur.fetchall()
 
@@ -320,7 +325,6 @@ def dashboard():
         shipments=shipments,
         search_query=search_query
     )
-
 @app.route("/view-shipment/<tracking_number>")
 def view_shipment(tracking_number):
     if not session.get("admin_logged_in"):
