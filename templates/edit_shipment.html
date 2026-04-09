@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Shipment - NovaTrack</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .card {
+            background: white;
+            max-width: 600px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        h2 {
+            color: #0077ff;
+            margin-top: 0;
+        }
+
+        label {
+            display: block;
+            margin: 14px 0 6px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d0d7e2;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 18px;
+            width: 100%;
+            padding: 14px;
+            background: #0077ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #005ed6;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Edit Shipment</h2>
+
+        <form method="POST">
+            <label>Tracking Number</label>
+            <input type="text" value="{{ package.tracking_number }}" readonly>
+
+            <label for="customer">Customer</label>
+            <input type="text" name="customer" id="customer" value="{{ package.customer }}" required>
+
+            <label for="origin">Origin</label>
+            <input type="text" name="origin" id="origin" value="{{ package.origin }}" required>
+
+            <label for="destination">Destination</label>
+            <input type="text" name="destination" id="destination" value="{{ package.destination }}" required>
+
+            <label for="status">Status</label>
+            <select name="status" id="status" required>
+                <option value="Shipment Created" {% if package.status == "Shipment Created" %}selected{% endif %}>Shipment Created</option>
+                <option value="In Transit" {% if package.status == "In Transit" %}selected{% endif %}>In Transit</option>
+                <option value="Out for Delivery" {% if package.status == "Out for Delivery" %}selected{% endif %}>Out for Delivery</option>
+                <option value="Delivered" {% if package.status == "Delivered" %}selected{% endif %}>Delivered</option>
+                <option value="Delayed" {% if package.status == "Delayed" %}selected{% endif %}>Delayed</option>
+                <option value="Arrived at Facility" {% if package.status == "Arrived at Facility" %}selected{% endif %}>Arrived at Facility</option>
+            </select>
+
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+</body>
+</html>

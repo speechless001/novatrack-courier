@@ -242,6 +242,15 @@ tr:hover {
 .clear-btn:hover {
     background: #d9dee3;
 }
+.edit-btn {
+    display: inline-block;
+    background: #f39c12;
+    color: white;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    margin-right: 6px;
+}
     </style>
 </head>
 <body>
@@ -331,6 +340,7 @@ tr:hover {
 </td>
     <td>
     <a class="table-btn" href="/view-shipment/{{ shipment.tracking_number }}">View</a>
+    <a href="/edit-shipment/{{ shipment.tracking_number }}" class="edit-btn">Edit</a>
 
     <a class="update-btn" href="/novatrack-update?tracking={{ shipment.tracking_number }}">
         Update

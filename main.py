@@ -356,6 +356,56 @@ def view_shipment(tracking_number):
         package=package,
         history=history
     )
+@app.route("/edit-shipment/<tracking_number>")
+def edit_shipment_page(tracking_number):
+    if not session.get("admin_logged_in"):
+        return redirect(url_for("login_page"))
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute(
+        "SELECT * FROM packages WHERE tracking_number = %s",
+        (tracking_number,)
+    )
+    package = cur.fetchone()
+
+    cur.close()
+    conn.close()
+
+    if not package:
+        return "Shipment not found", 404
+
+    return render_template("edit_shipment.html", package=package)
+
+
+@app.route("/edit-shipment/<tracking_number>", methods=["POST"])
+def edit_shipment(tracking_number):
+    if not session.get("admin_logged_in"):
+        return redirect(url_for("login_page"))
+
+    customer = request.form["customer"].strip()
+    origin = request.form["origin"].strip()
+    destination = request.form["destination"].strip()
+    status = request.form["status"].strip()
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute(
+        """
+        UPDATE packages
+        SET customer = %s, origin = %s, destination = %s, status = %s
+        WHERE tracking_number = %s
+        """,
+        (customer, origin, destination, status, tracking_number)
+    )
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    return redirect(url_for("dashboard"))
 
 
 create_tables()
