@@ -219,6 +219,38 @@
     opacity: 0.85;
     cursor: not-allowed;
 }
+.stats {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    margin: 40px auto;
+    gap: 20px;
+}
+
+.stat {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    flex: 1;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+}
+
+.stat h2 {
+    color: #0d6efd;
+    margin: 0;
+}
+
+.stat p {
+    margin-top: 8px;
+    color: #555;
+}
+.footer {
+    background: #0a3d91;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+}
     </style>
     
 </head>
@@ -253,6 +285,22 @@
 </div>
 
 <div class="features container">
+    <div class="container stats">
+    <div class="stat">
+        <h2>50K+</h2>
+        <p>Shipments Delivered</p>
+    </div>
+
+    <div class="stat">
+        <h2>120+</h2>
+        <p>Countries Covered</p>
+    </div>
+
+    <div class="stat">
+        <h2>99.9%</h2>
+        <p>Delivery Accuracy</p>
+    </div>
+</div>
     <div class="card">
         <h3>Fast Delivery Updates</h3>
         <p>Stay informed with real-time shipment activity from dispatch to final delivery.</p>
@@ -280,6 +328,10 @@
         spinner.style.display = "inline-block";
     });
 </script>
+
+<footer class="footer">
+    <p>© 2026 NovaTrack Courier. All rights reserved.</p>
+</footer>
 
 </body>
 </html>
