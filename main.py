@@ -3,6 +3,8 @@ import os
 import random
 import string
 from datetime import datetime
+import pytz
+
 
 import psycopg
 from psycopg.rows import dict_row
@@ -101,15 +103,24 @@ def track_package():
     package = cur.fetchone()
 
     cur.execute(
-        "SELECT * FROM tracking_history WHERE tracking_number = %s ORDER BY id ASC",
+        "SELECT * FROM tracking_history WHERE tracking_number = %s ORDER BY id DESC",
         (tracking_number,)
     )
     history = cur.fetchall()
 
+    usa_tz = pytz.timezone("America/New_York")
+
+    for item in history:
+        raw_time = item["update_time"]
+
+        if isinstance(raw_time, str):
+            raw_time = datetime.fromisoformat(raw_time)
+
+        raw_time = raw_time.astimezone(usa_tz)
+        item["formatted_time"] = raw_time.strftime("%b %d, %Y • %I:%M %p")
+
     cur.close()
     conn.close()
-
-    history = format_history_timestamps(history)
 
     return render_template(
         "result.html",
