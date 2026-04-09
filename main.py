@@ -2,21 +2,22 @@ from flask import Flask, render_template, request, redirect, url_for, session
 import os
 import random
 import string
-import psycopg
-from psycopg.rows import dict_row
 from datetime import datetime
 
-for item in history:
-    raw_time = item['update_time']
+import psycopg
+from psycopg.rows import dict_row
 
-    # Convert if it's a string
-    if isinstance(raw_time, str):
-        raw_time = datetime.fromisoformat(raw_time)
-
-    item['formatted_time'] = raw_time.strftime("%b %d, %Y • %I:%M %p")
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
+
+
+def get_db_connection():
+    return psycopg.connect(
+        os.environ["DATABASE_URL"],
+        row_factory=dict_row
+    )
+
 
 def create_tables():
     conn = get_db_connection()
@@ -45,13 +46,6 @@ def create_tables():
     cur.close()
     conn.close()
 
-def get_db_connection():
-    return psycopg.connect(
-        os.environ["DATABASE_URL"],
-        row_factory=dict_row
-    )
-import random
-import string
 
 def generate_tracking_number():
     conn = get_db_connection()
@@ -74,7 +68,20 @@ def generate_tracking_number():
             cur.close()
             conn.close()
             return tracking_number
-        
+
+
+def format_history_timestamps(history):
+    for item in history:
+        raw_time = item["update_time"]
+
+        if isinstance(raw_time, str):
+            raw_time = datetime.fromisoformat(raw_time)
+
+        item["formatted_time"] = raw_time.strftime("%b %d, %Y • %I:%M %p")
+
+    return history
+
+
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -102,6 +109,8 @@ def track_package():
     cur.close()
     conn.close()
 
+    history = format_history_timestamps(history)
+
     return render_template(
         "result.html",
         tracking_number=tracking_number,
@@ -109,13 +118,14 @@ def track_package():
         history=history
     )
 
+
 @app.route("/novatrack-admin")
 def admin():
-
     if not session.get("admin_logged_in"):
         return redirect(url_for("login_page"))
-    
+
     return render_template("admin.html")
+
 
 @app.route("/create-shipment", methods=["POST"])
 def create_shipment():
@@ -154,12 +164,15 @@ def create_shipment():
         destination=destination,
         status=status
     )
+
+
 @app.route("/novatrack-update")
 def update_page():
-     if not session.get("admin_logged_in"):
+    if not session.get("admin_logged_in"):
         return redirect(url_for("login_page"))
-     
-     return render_template("update.html")
+
+    return render_template("update.html")
+
 
 @app.route("/add-update", methods=["POST"])
 def add_update():
@@ -210,11 +223,16 @@ def add_update():
         <br>
         <a href="/novatrack-update">Go Back</a>
         """
-    
+
+
 @app.route("/login")
 def login_page():
-        return render_template("login.html")
-    
+    if session.get("admin_logged_in"):
+        return redirect(url_for("dashboard"))
+
+    return render_template("login.html")
+
+
 @app.route("/login", methods=["POST"])
 def login():
     username = request.form["username"]
@@ -228,11 +246,13 @@ def login():
         return redirect(url_for("dashboard"))
     else:
         return render_template("login.html", error="Invalid username or password")
-    
+
+
 @app.route("/logout")
 def logout():
     session.pop("admin_logged_in", None)
     return redirect(url_for("login_page"))
+
 
 @app.route("/dashboard")
 def dashboard():
@@ -290,6 +310,7 @@ def dashboard():
         search_query=search_query
     )
 
+
 @app.route("/view-shipment/<tracking_number>")
 def view_shipment(tracking_number):
     if not session.get("admin_logged_in"):
@@ -313,12 +334,15 @@ def view_shipment(tracking_number):
     cur.close()
     conn.close()
 
+    history = format_history_timestamps(history)
+
     return render_template(
         "result.html",
         tracking_number=tracking_number,
         package=package,
         history=history
     )
+
 
 create_tables()
 
