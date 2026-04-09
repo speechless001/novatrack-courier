@@ -3,9 +3,6 @@
 <head>
     <meta name="viewport" content="width=device-width, initisl-scale=1.0">
     <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
-    
-    item['formatted_time'] = formatted_time
-    
     <title>Tracking Result - NovaTrack Courier</title>
 
     <style>
@@ -450,7 +447,7 @@ h2 {
                 </div>
             </div>
 
-            <span class="time">{{ item.formatted_time }}</span>
+            <span class="time">{{ item.update_time }}</span>
 
             
             <h2>Tracking Timeline</h2>
