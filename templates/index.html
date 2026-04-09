@@ -8,401 +8,195 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            background: #eef3f8;
-            color: #222;
-        }
-        .card, .stat-card, .table-section {
-    transition: 0.2s ease;
+       body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    background: #eef3f8;
+    color: #222;
 }
 
-.card:hover, .stat-card:hover {
-    transform: translateY(-3px);
-}
-
-      .navbar {
+.navbar {
     background: linear-gradient(90deg, #0a3d91, #0d6efd);
     color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 24px;
+    padding: 16px 28px;
     flex-wrap: wrap;
-    gap: 12px;
 }
 
 .nav-left {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .nav-left img {
-    height: 85px;
+    height: 38px;
     width: auto;
 }
 
 .brand-name {
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 24px;
+    font-weight: 700;
 }
 
 .nav-right {
     display: flex;
-    gap: 18px;
-    flex-wrap: wrap;
+    gap: 24px;
 }
 
 .nav-right a {
     color: white;
     text-decoration: none;
+    font-size: 15px;
     font-weight: 500;
 }
 
-.nav-right a:hover {
-    opacity: 0.7;
-}
-.navbar {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+.hero {
+    padding: 70px 20px 40px;
+    text-align: center;
 }
 
-
-        .logo {
-    font-size: 28px;
-    font-weight: bold;
-    letter-spacing: 1px;
+.hero-content {
+    max-width: 900px;
+    margin: 0 auto;
 }
 
-.logo span {
-    color: #00c6ff;
+.hero h1 {
+    font-size: 46px;
+    margin-bottom: 14px;
+    color: #0d6efd;
+    line-height: 1.15;
 }
 
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            margin-left: 25px;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .nav-links a:hover {
-            text-decoration: underline;
-        }
-
-        .hero {
-            text-align: center;
-            padding: 100px 20px 60px 20px;
-        }
-
-        .hero h1 {
-            font-size: 48px;
-            color: #0077ff;
-            margin-bottom: 15px;
-        }
-
-        .hero p {
-            font-size: 20px;
-            color: #555;
-            margin-bottom: 40px;
-        }
-
-        .track-box {
-            background: white;
-            width: 90%;
-            max-width: 850px;
-            margin: auto;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .track-form {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .track-form input {
-            flex: 1;
-            min-width: 260px;
-            padding: 15px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-        }
-
-        .track-form button {
-            padding: 15px 22px;
-            font-size: 16px;
-            border: none;
-            background: #0077ff;
-            color: white;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .track-form button:hover {
-            background: #005ed6;
-        }
-
-        .info-section {
-            width: 90%;
-            max-width: 1000px;
-            margin: 50px auto;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
-        .info-card {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0px 5px 15px rgba(0,0,0,0.08);
-            text-align: center;
-        }
-
-        .info-card h3 {
-            color: #0077ff;
-            margin-bottom: 12px;
-        }
-
-        .info-card p {
-            color: #555;
-            font-size: 15px;
-        }
-        button, .btn, .action-btn {
-    transition: 0.2s ease;
+.hero p {
+    font-size: 18px;
+    color: #555;
+    max-width: 760px;
+    margin: 0 auto 28px;
+    line-height: 1.6;
 }
 
-button:hover, .btn:hover, .action-btn:hover {
-    transform: translateY(-1px);
+.track-form {
+    background: white;
+    padding: 16px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    display: flex;
+    gap: 12px;
+    max-width: 760px;
+    margin: 0 auto;
 }
-.logo img {
-    height: 45px;
-    display: block;
+
+.track-form input {
+    flex: 1;
+    padding: 16px;
+    font-size: 16px;
+    border: 1px solid #d3dbe6;
+    border-radius: 10px;
+    outline: none;
 }
+
+.track-form button {
+    background: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 16px 22px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.track-form button:hover {
+    background: #005ed6;
+}
+
+.container {
+    width: 90%;
+    max-width: 1150px;
+    margin: 0 auto;
+}
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    padding: 30px 0 50px;
+}
+
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px 22px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+.card h3 {
+    color: #0d6efd;
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 22px;
+}
+
+.card p {
+    color: #555;
+    margin: 0;
+    line-height: 1.6;
+    font-size: 15px;
+}
+
 @media (max-width: 768px) {
     .navbar {
-        padding: 10px 15px;
-        justify-content: center;
-        text-align: center;
-    }
-    @media (max-width: 768px) {
-    .search-box {
-        flex-direction: column;
+        padding: 14px 16px;
         gap: 10px;
     }
 
-    .search-box input,
-    .search-box button {
-        width: 100%;
-    }
-}
-.card {
-    margin-bottom: 15px;
-}
-.card {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-    
-
-    .nav-left,
-    .nav-right {
-        width: 100%;
-        justify-content: center;
-    }
-
     .brand-name {
-        font-size: 17px;
-    }
-
-    .hero h1 {
-        font-size: 34px;
-    }
-
-    .hero p {
-        font-size: 17px;
-    }
-
-    .track-box {
-        width: 100%;
-        padding: 20px;
-        box-sizing: border-box;
-    }
-
-    .track-form {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .track-form input,
-    .track-form button {
-        width: 100%;
-        min-width: 0;
-        box-sizing: border-box;
-    }
-
-    .info-section,
-    .stats-grid,
-    .details-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .progress-bar {
-        flex-wrap: wrap;
-        gap: 12px;
-        justify-content: center;
-    }
-
-    .step-line {
-        display: none;
-    }
-
-    .step {
-        width: 45%;
-        min-width: 130px;
-    }
-
-    .table-section {
-        overflow-x: auto;
-    }
-
-    table {
-        min-width: 700px;
-    }
-
-    .card,
-    .box,
-    .container {
-        width: 100%;
-        box-sizing: border-box;
-    }
-    body {
-    padding-bottom: 40px;
-}
-}
-@media (max-width: 768px) {
-    body {
-        padding-bottom: 20px;
-    }
-
-    .navbar {
-        padding: 12px 14px;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    .nav-left {
-        gap: 8px;
-    }
-
-    .nav-left img {
-        height: 28px;
-    }
-
-    .brand-name {
-        font-size: 16px;
+        font-size: 18px;
     }
 
     .nav-right {
         width: 100%;
         justify-content: center;
-        display: flex;
         gap: 18px;
-        margin-top: 4px;
     }
 
     .nav-right a {
         font-size: 14px;
-        margin-left: 0;
     }
 
     .hero {
-        padding: 40px 16px 20px;
+        padding: 42px 16px 24px;
     }
 
     .hero h1 {
-        font-size: 24px;
-        line-height: 1.2;
-        margin-bottom: 12px;
+        font-size: 28px;
     }
 
     .hero p {
         font-size: 16px;
-        line-height: 1.5;
         margin-bottom: 20px;
     }
 
-    .search-box,
     .track-form {
         flex-direction: column;
-        gap: 10px;
-        padding: 16px;
+        padding: 14px;
     }
 
-    .search-box input,
     .track-form input,
-    .search-box button,
     .track-form button {
         width: 100%;
         box-sizing: border-box;
-        min-width: 0;
     }
 
-    .search-box input,
-    .track-form input {
-        font-size: 16px;
-        padding: 14px;
-    }
-
-    .search-box button,
-    .track-form button {
-        font-size: 16px;
-        padding: 14px;
-    }
-
-    .features,
-    .info-section {
-        grid-template-columns: 1fr;
-        gap: 14px;
-        margin-top: 20px;
-    }
-
-    .card {
-        padding: 20px 16px;
-        margin-bottom: 0;
-    }
-
-    .card h3 {
-        font-size: 20px;
-        margin-bottom: 10px;
-    }
-
-    .card p {
-        font-size: 15px;
-        line-height: 1.6;
-    }
-
-    .container {
-        width: 94%;
-        max-width: 100%;
-        margin: 0 auto;
-    }
-
-    section,
-    .hero,
     .features {
-        margin-bottom: 20px;
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding-top: 24px;
     }
-}
-.features {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
 }
     </style>
     
@@ -410,47 +204,46 @@ button:hover, .btn:hover, .action-btn:hover {
 <body>
 
     <div class="navbar">
-       <div class="nav-left">
-    <img src="{{ url_for('static', filename='logo.png') }}" alt="NovaTrack Logo">
-        <span
-        class="brand-name">NovaTrack Courier</span> 
+    <div class="nav-left">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="NovaTrack Logo">
+        <span class="brand-name">NovaTrack Courier</span>
+    </div>
+
+    <div class="nav-right">
+        <a href="/">Track</a>
+        <a href="#">Services</a>
+        <a href="#">Support</a>
+    </div>
 </div>
 
-        <div class="nav-right">
-            <a href="/">Track</a>
-            <a href="#">Services</a>
-            <a href="#">Support</a>
-        </div>
+<div class="hero">
+    <div class="hero-content">
+        <h1>Fast, Secure Global Shipment Tracking</h1>
+        <p>Track parcels in real time with professional delivery updates, secure tracking numbers, and reliable logistics visibility.</p>
+
+        <form class="track-form" action="/track" method="POST">
+            <input type="text" name="tracking_number" placeholder="Enter your tracking number" required>
+            <button type="submit">Track Package</button>
+        </form>
+    </div>
+</div>
+
+<div class="features container">
+    <div class="card">
+        <h3>Fast Delivery Updates</h3>
+        <p>Stay informed with real-time shipment activity from dispatch to final delivery.</p>
     </div>
 
-    <div class="hero">
-        <h1>Track Shipments Worldwide</h1>
-        <p>Fast, secure, and reliable package tracking with NovaTrack Courier</p>
-
-        <div class="track-box">
-            <form class="track-form" action="/track" method="POST">
-                <input type="text" name="tracking_number" placeholder="Enter your tracking number" required>
-                <button type="submit">Track Package</button>
-            </form>
-        </div>
+    <div class="card">
+        <h3>Secure Tracking</h3>
+        <p>Every shipment uses a professional tracking number for accurate and protected tracking.</p>
     </div>
 
-    <div class="info-section">
-        <div class="info-card">
-            <h3>Fast Delivery Updates</h3>
-            <p>Get real-time shipment progress from dispatch to final delivery.</p>
-        </div>
-
-        <div class="info-card">
-            <h3>Secure Tracking</h3>
-            <p>Track your package safely with a unique NovaTrack tracking number.</p>
-        </div>
-
-        <div class="info-card">
-            <h3>Global Coverage</h3>
-            <p>Monitor shipments across cities and regions with confidence.</p>
-        </div>
+    <div class="card">
+        <h3>Global Coverage</h3>
+        <p>Monitor shipments across cities and regions with confidence and consistent visibility.</p>
     </div>
+</div>
 
 </body>
 </html>
