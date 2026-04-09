@@ -198,6 +198,27 @@
         padding-top: 24px;
     }
 }
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    display: inline-block;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.track-form button:disabled {
+    opacity: 0.85;
+    cursor: not-allowed;
+}
     </style>
     
 </head>
@@ -221,9 +242,12 @@
         <h1>Fast, Secure Global Shipment Tracking</h1>
         <p>Track parcels in real time with professional delivery updates, secure tracking numbers, and reliable logistics visibility.</p>
 
-        <form class="track-form" action="/track" method="POST">
+        <form class="track-form" id="trackform" action="/track" method="POST">
             <input type="text" name="tracking_number" placeholder="Enter your tracking number" required>
-            <button type="submit">Track Package</button>
+            <button type="submit" id="trackBtn">
+    <span id="btnText">Track Package</span>
+    <span id="spinner" class="spinner" style="display: none;"></span>
+</button>
         </form>
     </div>
 </div>
@@ -244,6 +268,18 @@
         <p>Monitor shipments across cities and regions with confidence and consistent visibility.</p>
     </div>
 </div>
+<script>
+    const trackForm = document.getElementById("trackForm");
+    const trackBtn = document.getElementById("trackBtn");
+    const btnText = document.getElementById("btnText");
+    const spinner = document.getElementById("spinner");
+
+    trackForm.addEventListener("submit", function () {
+        trackBtn.disabled = true;
+        btnText.textContent = "Tracking...";
+        spinner.style.display = "inline-block";
+    });
+</script>
 
 </body>
 </html>
