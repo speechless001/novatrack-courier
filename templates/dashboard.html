@@ -251,6 +251,18 @@ tr:hover {
     border-radius: 6px;
     margin-right: 6px;
 }
+.delete-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background: #b02a37;
+}
     </style>
 </head>
 <body>
@@ -341,6 +353,11 @@ tr:hover {
     <td>
     <a class="table-btn" href="/view-shipment/{{ shipment.tracking_number }}">View</a>
     <a href="/edit-shipment/{{ shipment.tracking_number }}" class="edit-btn">Edit</a>
+    <form action="/delete-shipment/{{ shipment.tracking_number }}" method="POST" style="display:inline;">
+    <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this shipment?');">
+        Delete
+    </button>
+</form>
 
     <a class="update-btn" href="/novatrack-update?tracking={{ shipment.tracking_number }}">
         Update

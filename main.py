@@ -407,6 +407,30 @@ def edit_shipment(tracking_number):
 
     return redirect(url_for("dashboard"))
 
+@app.route("/delete-shipment/<tracking_number>", methods=["POST"])
+def delete_shipment(tracking_number):
+    if not session.get("admin_logged_in"):
+        return redirect(url_for("login_page"))
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute(
+        "DELETE FROM tracking_history WHERE tracking_number = %s",
+        (tracking_number,)
+    )
+
+    cur.execute(
+        "DELETE FROM packages WHERE tracking_number = %s",
+        (tracking_number,)
+    )
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    return redirect(url_for("dashboard"))
+
 
 create_tables()
 
