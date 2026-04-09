@@ -116,6 +116,16 @@
         .card button:hover {
             background: #005ed6;
         }
+        select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d0d7e2;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+    background: white;
+}
     </style>
 </head>
 <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
@@ -147,8 +157,22 @@
        value="{{ request.args.get('tracking', '') }}"
        placeholder="Tracking Number"
        required>
-                <input type="text" name="message" placeholder="Update Message" required>
-                <button type="submit">Add Update</button>
+       <label for="tracking_number">Tracking Number</label>
+<input type="text" name="tracking_number" id="tracking_number" required>
+
+<label for="message">Update Status</label>
+<select name="message" id="message" required>
+    <option value="">Select status</option>
+    <option value="Shipment Created">Shipment Created</option>
+    <option value="In Transit">In Transit</option>
+    <option value="Out for Delivery">Out for Delivery</option>
+    <option value="Delivered">Delivered</option>
+    <option value="Delayed">Delayed</option>
+    <option value="Arrived at Facility">Arrived at Facility</option>
+</select>
+
+<button type="submit">Add Update</button>
+
             </form>
         </div>
     </div>
