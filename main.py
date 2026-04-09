@@ -264,26 +264,26 @@ def dashboard():
     conn = get_db_connection()
     cur = conn.cursor()
 
-    cur.execute("SELECT COUNT(*) FROM packages")
-    total_shipments = cur.fetchone()[0]
+    cur.execute("SELECT COUNT(*) AS count FROM packages")
+    total_shipments = cur.fetchone()["count"]
 
     cur.execute(
-        "SELECT COUNT(*) FROM packages WHERE status = %s",
+        "SELECT COUNT(*) AS count FROM packages WHERE status = %s",
         ("Delivered",)
     )
-    delivered = cur.fetchone()[0]
+    delivered = cur.fetchone()["count"]
 
     cur.execute(
-        "SELECT COUNT(*) FROM packages WHERE status = %s",
+        "SELECT COUNT(*) AS count FROM packages WHERE status = %s",
         ("In Transit",)
     )
-    in_transit = cur.fetchone()[0]
+    in_transit = cur.fetchone()["count"]
 
     cur.execute(
-        "SELECT COUNT(*) FROM packages WHERE status = %s",
+        "SELECT COUNT(*) AS count FROM packages WHERE status = %s",
         ("Out for Delivery",)
     )
-    out_for_delivery = cur.fetchone()[0]
+    out_for_delivery = cur.fetchone()["count"]
 
     if search_query:
         cur.execute(
@@ -309,7 +309,6 @@ def dashboard():
         shipments=shipments,
         search_query=search_query
     )
-
 
 @app.route("/view-shipment/<tracking_number>")
 def view_shipment(tracking_number):
