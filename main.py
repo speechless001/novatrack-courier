@@ -12,6 +12,9 @@ from psycopg.rows import dict_row
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["SESSION_COOKIE_SECURE"] = True
 
 
 def get_db_connection():
@@ -249,8 +252,9 @@ def login():
     username = request.form["username"]
     password = request.form["password"]
 
-    admin_username = "admin"
-    admin_password = "12345"
+    admin_username = os.environ.get("ADMIN_USERNAME","admin")
+
+    admin_password = os.environ.get("ADMIN_PASSWORD", "12345")
 
     if username == admin_username and password == admin_password:
         session["admin_logged_in"] = True
