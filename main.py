@@ -4,8 +4,7 @@ import random
 import string
 from datetime import datetime
 import pytz
-
-
+from wekzeug.security import generate_password_hash, check_password_hash
 import psycopg
 from psycopg.rows import dict_row
 
@@ -256,7 +255,7 @@ def login():
 
     admin_password = os.environ.get("ADMIN_PASSWORD", "12345")
 
-    if username == admin_username and password == admin_password:
+    if username == admin_username and check_password_hash(admin_password,password):
         session["admin_logged_in"] = True
         return redirect(url_for("dashboard"))
     else:
