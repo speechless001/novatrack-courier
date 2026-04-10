@@ -4,7 +4,7 @@ import random
 import string
 from datetime import datetime
 import pytz
-from wekzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 import psycopg
 from psycopg.rows import dict_row
 
