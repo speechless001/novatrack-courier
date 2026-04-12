@@ -277,6 +277,15 @@
                 box-sizing: border-box;
                 padding: 14px;
             }
+            .reference-bar {
+    flex-direction: column;
+    gap: 12px;
+}
+
+.reference-item {
+    width: 100%;
+    box-sizing: border-box;
+}
         }
         .status-badge {
     display: inline-block;
@@ -334,6 +343,62 @@
     color: #111;
     font-weight: 600;
 }
+.reference-bar {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+
+.reference-item {
+    background: #f8fbff;
+    border: 1px solid rgba(13, 110, 253, 0.08);
+    border-radius: 12px;
+    padding: 12px 16px;
+    min-width: 180px;
+}
+
+.reference-label {
+    display: block;
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.reference-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0d6efd;
+    word-break: break-word;
+}
+.latest-tag {
+    display: inline-block;
+    margin-bottom: 8px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: rgba(25, 135, 84, 0.12);
+    color: #198754;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+.not-found {
+    text-align: center;
+    font-size: 17px;
+    padding: 12px 0 4px;
+    color: #555;
+    line-height: 1.7;
+}
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+    border: 1px solid rgba(13, 110, 253, 0.04);
+}
+
     </style>
 </head>
 <body>
@@ -355,6 +420,17 @@
 <p class="result-subtitle">
     View shipment details, current delivery status, and the latest tracking history for this package.
 </p>
+<div class="reference-bar">
+    <div class="reference-item">
+        <span class="reference-label">Tracking ID</span>
+        <span class="reference-value">{{ tracking_number }}</span>
+    </div>
+
+    <div class="reference-item">
+        <span class="reference-label">Service</span>
+        <span class="reference-value">NovaTrack Standard</span>
+    </div>
+</div>
                 <div class="details-grid">
                     <div class="detail-box">
                         <strong>Tracking Number</strong>
@@ -399,19 +475,25 @@
                             <div class="line"></div>
                         </div>
 
-                        <div class="content">
-                            <strong>{{ item.update_message }}</strong>
-                            <span class="time">{{ item.formatted_time }}</span>
-                        </div>
+                       <div class="content">
+    {% if loop.first %}
+    <span class="latest-tag">Latest Update</span>
+    {% endif %}
+    <strong>{{ item.update_message }}</strong>
+    <span class="time">{{ item.formatted_time }}</span>
+</div>
                     </div>
                     {% endfor %}
                 </div>
 
             {% else %}
-                <h2>Package Not Found</h2>
-                <p class="not-found">
-                    No package was found for tracking number <strong>{{ tracking_number }}</strong>.
-                </p>
+              {% else %}
+    <h2>Package Not Found</h2>
+    <p class="not-found">
+        We couldn’t find any shipment matching tracking number <strong>{{ tracking_number }}</strong>.
+        Please check the number and try again.
+    </p>
+{% endif %}
             {% endif %}
 
             <div class="back-link">
