@@ -112,6 +112,8 @@ def track_package():
 
     usa_tz = pytz.timezone("America/New_York")
 
+    if not history:
+      history = []
     for item in history:
         raw_time = item["update_time"]
 
@@ -120,6 +122,7 @@ def track_package():
 
         raw_time = raw_time.astimezone(usa_tz)
         item["formatted_time"] = raw_time.strftime("%b %d, %Y • %I:%M %p")
+        item['update_message'] = item.get('status', 'update')
 
     cur.close()
     conn.close()

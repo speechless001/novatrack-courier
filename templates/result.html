@@ -479,7 +479,7 @@
     {% if loop.first %}
     <span class="latest-tag">Latest Update</span>
     {% endif %}
-    <strong>{{ item.update_message }}</strong>
+    <strong>{{ item.update_message or item.status }}</strong>
     <span class="time">{{ item.formatted_time }}</span>
 </div>
                     </div>
