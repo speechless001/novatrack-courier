@@ -122,9 +122,10 @@ def track_package():
 
         raw_time = raw_time.astimezone(usa_tz)
         item["formatted_time"] = raw_time.strftime("%b %d, %Y • %I:%M %p")
-        item['update_message'] = item.get('status', 'update')
+    if "update message" not in item or not item ["update message"]:
+     item["update message"] = "shipment update"
 
-    cur.close()
+     cur.close()
     conn.close()
 
     return render_template(
