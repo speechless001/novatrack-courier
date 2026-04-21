@@ -8,7 +8,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import psycopg
 from psycopg.rows import dict_row
 
-
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 app.config["SESSION_COOKIE_HTTPONLY"] = True
