@@ -160,7 +160,7 @@ def create_shipment():
     status = request.form["status"].title()
 
     tracking_number = generate_tracking_number()
-    
+
 
     conn = get_db_connection()
     cur = conn.cursor()
@@ -212,7 +212,7 @@ def add_update():
         "Delayed": "Delivery has been delayed due to operational or route conditions.",
         "Delivered": "Package has been delivered successfully.",
     }
-    messages = status_messages.get(meessage, message)
+    messages = status_messages.get(message, message)
 
     conn = get_db_connection()
     cur = conn.cursor()
