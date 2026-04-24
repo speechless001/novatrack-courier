@@ -561,16 +561,16 @@
                         <div class="detail-box">
                             <strong>Current Status</strong>
                             <span>{{ package.status.title()}}</span>
-
-                            {% if package.estimated_delivery %}
+                       </div>
+                       {% if package.estimated_delivery %}
                             <div class="detail-box">
                                 <strong>Estimated Delivery</strong>
                                 <span>{{ package.estimated_delivery }}</span>
                             </div>
                             {% endif %}
-                        </div>
                     </div>
                 </div>
+                
 
             {% else %}
                 <div class="not-found-wrap">
