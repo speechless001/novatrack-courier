@@ -166,7 +166,7 @@ def create_shipment():
     cur = conn.cursor()
 
     cur.execute(
-        "INSERT INTO packages (tracking_number, customer, origin, destination, status, estimated_delivery) VALUES (%s, %s, %s, %s, %s)",
+        "INSERT INTO packages (tracking_number, customer, origin, destination, status, estimated_delivery) VALUES (%s, %s, %s, %s, %s,%s)",
         (tracking_number, customer, origin, destination, status)
     )
 
