@@ -160,19 +160,19 @@ def create_shipment():
     status = request.form["status"].title()
 
     tracking_number = generate_tracking_number()
-
+    estimated_deivery = request.form["estimated_delivery"].strip()
 
     conn = get_db_connection()
     cur = conn.cursor()
 
     cur.execute(
-        "INSERT INTO packages (tracking_number, customer, origin, destination, status) VALUES (%s, %s, %s, %s, %s)",
+        "INSERT INTO packages (tracking_number, customer, origin, destination, status, estimated_delivery) VALUES (%s, %s, %s, %s, %s)",
         (tracking_number, customer, origin, destination, status)
     )
 
     cur.execute(
         "INSERT INTO tracking_history (tracking_number, update_message) VALUES (%s, %s)",
-        (tracking_number, "Shipment Created")
+        (tracking_number, "Shipment information recieved. Package is awaiting pickup")
     )
 
     conn.commit()
