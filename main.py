@@ -32,8 +32,10 @@ def create_tables():
         customer TEXT,
         origin TEXT,
         destination TEXT,
-        status TEXT
-    )
+        status TEXT,
+        estimated_delivery TEXT
+    
+   )
     """)
 
     cur.execute("""
@@ -44,6 +46,10 @@ def create_tables():
         update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     """)
+    try:
+        cur.execute("ALTER TABLE packages ADD COLUMN estimated_delivery TEXT")
+    except Exception:
+        conn.rollback()
 
     conn.commit()
     cur.close()
@@ -154,6 +160,7 @@ def create_shipment():
     status = request.form["status"].title()
 
     tracking_number = generate_tracking_number()
+    
 
     conn = get_db_connection()
     cur = conn.cursor()
@@ -197,6 +204,15 @@ def add_update():
 
     tracking_number = request.form["tracking_number"].strip()
     message = request.form["message"].strip()
+    status_messages = {
+        "Shipment Created": "Shipment information recieved. Package is awaiting pickup.",
+        "Arrived at Facility": "package has arrived at a NovaTrack sorting facility.",
+        "In Transit": "Package is moving through the NovaTrack delivery network.",
+        "Out For Delivery": "Package is out for delivery and is expected to arrive today.",
+        "Delayed": "Delivery has been delayed due to operational or route conditions.",
+        "Delivered": "Package has been delivered successfully.",
+    }
+    messages = status_messages.get(meessage, message)
 
     conn = get_db_connection()
     cur = conn.cursor()

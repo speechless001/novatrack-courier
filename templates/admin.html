@@ -143,10 +143,25 @@
             <h3>New Shipment Details</h3>
 
             <form method="POST" action="/create-shipment">
+
 <input type="text" name="customer" placeholder="Customer Name" required>
+
 <input type="text" name="origin" placeholder="Origin City" required>
+
 <input type="text" name="destination" placeholder="Destination City" required>
+
 <input type="text" name="status" placeholder="Status (Shipment Created, In Transit...)" required> 
+
+<label for="estimated_delivery">Estimated Delivery</label>
+
+<input type="text" name="estimated_delivery" id="estimated_delivery" placeholder="Example: Apr 12, 2026 or Today by 8:00 PM">
+
+<select name="status">
+    <option>Shipment Created</option>
+    <option>In Transit</option>
+    <option>Out For Delivery</option>
+    <option>Delivered</option>
+</select>
 
 <button type="submit">Create Shipment</button>
             </form>
